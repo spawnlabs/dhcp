@@ -40,8 +40,9 @@ end
 #convert them to the proper formatted lists, sort, and pass into template
 default = data_bag_item('dhcp', 'default')
 
-allows = node['dhcp']['allows'] || []
-allows.push(default['allows']).flatten!
+allows = node.default['dhcp']['allows'] || []
+allows << default['allows']
+allows.flatten!
 allows.uniq!
 allows.sort!
 Chef::Log.debug "allows: #{allows}"
