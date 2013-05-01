@@ -1,19 +1,25 @@
 # File managed by Chef
 
 subnet <%= @subnet %> netmask <%= @netmask%> {
-<% @ranges.each do |range| -%>
-  range <%= range %>;
-<% end -%>
-<% @parameters.each_pair do |param,value| -%>
-  <%= param %> <%= value %>;
-<% end -%>
 <% @options.each_pair do |option,value| -%>
-  option <%= option %> <%= value %>;
+    option <%= option %> <%= value %>;
 <% end -%>
 
-  #groups
-<% @groups.each do |group| -%>
-  include "<%= node[:dhcp][:config_dir] %>/groups.d/<%= group %>.conf";
-<% end -%>
+    pool {
+        <% if node[:dhcp][:enable_failover] %>
+        failover peer "dhcp-failover";
+        <% end %>
 
+        <% @ranges.each do |range| -%>
+        range <%= range %>;
+        <% end -%>
+        <% @parameters.each_pair do |param,value| -%>
+        <%= param %> <%= value %>;
+        <% end -%>
+
+        #groups
+        <% @groups.each do |group| -%>
+        include "<%= node[:dhcp][:config_dir] %>/groups.d/<%= group %>.conf";
+        <% end -%>
+    }
 }

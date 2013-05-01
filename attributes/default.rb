@@ -12,6 +12,10 @@ default[:dhcp][:interfaces] = [ "eth0" ]
 
 default[:dhcp][:allows] = []
 
+default[:dhcp][:enable_failover] = false
+
+default[:dhcp][:failover_servers] = nil
+
 default[:dhcp][:parameters] = {
   "default-lease-time" => "600",
   "max-lease-time" => "7200",

@@ -1,5 +1,13 @@
 # File managed by Chef
 
+<% if node[:dhcp][:enable_failover] %>
+failover peer "dhcp-failover" {
+    <% node[:dhcp][:failover_servers]["#{node[:hostname]}"][:failover_options].each do |f_option| -%>
+    <%= f_option %>;
+    <% end %>
+}
+<% end %>
+
 <% @allows.each do |allow| -%>
 allow <%= allow %>;
 <% end -%>

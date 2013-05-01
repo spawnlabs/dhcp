@@ -8,11 +8,13 @@ Based off of work initially done by Dell, extended by Atalanta Systems and rewor
 
 Requirements
 ============
-Tested with Ubuntu 10.04 and Chef 0.10.
+Tested with: 
+Ubuntu 10.04 and Chef 0.10
+Ubuntu 12.04 and Chef 0.11
 
 Limitations
 ===========
-Pools, failovers, classes and subclasses are not yet supported.
+Classes and subclasses are not yet supported.
 
 Recipes
 =======
@@ -23,6 +25,52 @@ Passes through to the server.
 server
 ------
 The node will install and configure the `dhcp3-server` application. Configuration is through the `dhcp` data bag.
+
+
+Attributes
+==========
+
+Failover can be enabled by using the following attributes.  
+The failover_options array allows for the options specified for failover
+node[:dhcp][:enable_failover] = boolean
+node[:dhcp][:failover_servers] = a hash of failover servers by hostname with failover_options
+node[:dhcp][:failover_options] = an array of failover options to specify
+
+Example override in json:
+```
+      "dhcp": {
+          "enable_failover": true,
+          "failover_servers": {
+              "primary_hostname": {
+                  "failover_options": [
+                        "primary",
+                        "address 10.0.1.2",
+                        "port 647",
+                        "peer address 10.0.1.3",
+                        "peer port 847",
+                        "max-response-delay 60",
+                        "max-unacked-updates 10",
+                        "load balance max seconds 3",
+                        "mclt 3600",
+                        "split 128"
+                   ]
+              },
+              "secondary_hostname": {
+                  "failover_options": [
+                        "secondary",
+                        "address 10.0.1.3",
+                        "port 847",
+                        "peer address 10.0.1.2",
+                        "peer port 647",
+                        "max-response-delay 60",
+                        "max-unacked-updates 10",
+                        "load balance max seconds 3"
+                   ]
+              }
+          }
+      },        
+```
+
 
 Data Bag
 ========
